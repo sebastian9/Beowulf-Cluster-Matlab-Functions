@@ -1,5 +1,5 @@
 function [ip] = GetMachineIP()
     [~,ip] = system('ipconfig');
-    ip = ip(strfind(ip,'Dirección IPv4. . . . . . . . . . . . . . : ')+length('Dirección IPv4. . . . . . . . . . . . . . : '):end);
-    ip = ip(1:length('10.1.81.126'));
+    ip = ip(strfind(ip,'DirecciÃ³n IPv4. . . . . . . . . . . . . . : ')+length('DirecciÃ³n IPv4. . . . . . . . . . . . . . : '):end);
+    ip = ip(1:strfind(ip,'MÃ¡scara')-5);
 end
