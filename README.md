@@ -1,6 +1,6 @@
 # Beowulf Cluster Matlab Interface 
 
-Matlab HTTP interface with the RoR beowulf cluster, for the web application task manager check the Beowulf Cluster repo.
+Matlab HTTP interface with the RoR beowulf cluster, for the web application task manager and a general explanation of the system check the Beowulf Cluster repo.
 
 ## Usage
 
