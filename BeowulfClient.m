@@ -5,16 +5,16 @@ function [] = BeowulfClient(fun)
     % Obtener el ID de la Máquina
     machines = BeowulfReadMachines();
     for i = 1:height(machines)
-           if cell2mat(machines.ip(i)) == IP
-                machine_ID = machines.id(i);
+           if strcmp(cell2mat(machines.ip(i)),IP)
+                machine_ID = cell2mat(machines.id(i));
            end
     end
     % Revisar Tasks hasta encontrar una task en waiting con el IP de la
     % máquina
-    while 1
+   % while 1
         tasks = BeowulfReadTasks();
         for i = 1:height(tasks)
-           if cell2mat(tasks.ip(i)) == IP && strcmp(cell2mat(tasks.status(i)),'Waiting')
+           if strcmp(cell2mat(tasks.ip(i)),IP) && strcmp(cell2mat(tasks.status(i)),'Waiting')
                 % Actualizar status de Machines a working
                 BeowulfUpdateMachine(machine_ID,'Working',IP);
                 % Actualizar status de Task a working
@@ -40,4 +40,4 @@ function [] = BeowulfClient(fun)
            end
         end
     end
-end
+%end

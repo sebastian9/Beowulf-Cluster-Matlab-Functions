@@ -16,6 +16,8 @@ function [tasks] = BeowulfReadTasks()
         temp = temp(strfind(temp,'<td>')+length('<td>'):end);
         tasks(i).output = temp(1:strfind(temp,'</td>')-1);
         temp = temp(strfind(temp,'<tr>')+length('<tr>'):end);
+        tasks(i).updated_at = temp(1:strfind(temp,'</td>')-1);
+        temp = temp(strfind(temp,'<tr>')+length('<tr>'):end);
     end
     tasks = struct2table(tasks);
 end
