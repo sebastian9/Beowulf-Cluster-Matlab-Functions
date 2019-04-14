@@ -1,4 +1,4 @@
-function [OUTPUTS,INVALID_INPUTS] = BeowulfMaster(inputs,time)
+function [OUTPUTS,INVALID_INPUTS] = BeowulfMaster(inputs,timemax)
     % Recibe un string con los parámetros de los inputs separados por comas
     % y con los input batchs separados por punto y coma con un compromiso
     % entre el tiempo estimado que toma cada tarea (TIME) y el tiempo que 
@@ -7,11 +7,11 @@ function [OUTPUTS,INVALID_INPUTS] = BeowulfMaster(inputs,time)
     % Revisar Machines con status en waiting hasta encontrar una
     
     while length(inputs)>0
-        Machines = BeowulfReadTasks()
+        Machines = BeowulfReadMachines();
         i=1;
         while i <= height(Machines)
-            if Machines(i).status == -1
-                Client = Machines(i);
+            if strcmp(cell2mat(Machines.status(i)),'Waiting')
+                Client = cell2mat(Machines.Ip(i))
                 break
             end
             i=i+1;
@@ -19,16 +19,40 @@ function [OUTPUTS,INVALID_INPUTS] = BeowulfMaster(inputs,time)
         
     % Definir Inputs para la tarea a realizar desde el vector de entrada 
       
-        Task = inputs(1);
+        Task = inputs(1)
         inputs(1) = [];
     
     % Crear una Task con los Inputs definidos y la Machine encontrada como
     % waiting
         
-        webstring = 'utf8=%E2%9C%93&task%5Bstatus%5D=waiting&task%5Binput%5D=',char(Task),'&task%5Boutput%5D=+&commit=Create+Task'
-        
+        BeowulfCreateTask('Waiting',Task,'Pending')
     
     % Corroborar status del task como working en un tiempo sensato
+    
+        Tasks = BeowulfReadTasks();
+        i=1;
+        while i <= height(Tasks)
+            if strcmp(cell2mat(Tasks.status(i)),'Waiting')
+                Date = cell2mat(Tasks.UpdatedAt(i));
+                t = datetime('now')-datetime(Date,'InputFormat','dd-MMM-yyyy HH:mm:ss');
+                time = strsplit(char(t),':');
+                timemin = str2num(time{1})*60+str2num(time{2});
+                if time > timemax
+                    BeowulfUpdateTask(Tasks.id(i),Failed,Tasks.input(i),Tasks.output(i));
+                end
+            end
+            if strcmp(cell2mat(Tasks.status(i)),'Done')
+                Date = cell2mat(Tasks.UpdatedAt(i));
+                t = datetime('now')-datetime(Date,'InputFormat','dd-MMM-yyyy HH:mm:ss');
+                time = strsplit(char(t),':');
+                timemin = str2num(time{1})*60+str2num(time{2});
+                if time > timemax
+                    BeowulfUpdateTask(Tasks.id(i),Failed,Tasks.input(i),Tasks.output(i));
+                end
+            end
+            i=i+1;
+        end
+        
     
     % Revisar tasks en Done que no haya recopilado y recopilar su output
     
