@@ -1,7 +1,7 @@
 function [tasks] = BeowulfReadTasks()
     temp = webread('https://beowulf-rocket.herokuapp.com');
     c = count(temp,'<tr>') - 1;
-    tasks = struct('id',{},'status',{},'ip',{},'input',{},'output',{},'updated_at',{});
+    tasks = struct('id''status',{},'input',{},'output',{});
     temp = temp(strfind(temp,'<tbody>')+length('<tbody>'):end);
 
     for i = (1:c)
@@ -17,7 +17,7 @@ function [tasks] = BeowulfReadTasks()
         tasks(i).output = temp(1:strfind(temp,'</td>')-1);
         temp = temp(strfind(temp,'<td>')+length('<td>'):end);
         tasks(i).updated_at = temp(1:strfind(temp,'</td>')-1);
-        temp = temp(strfind(temp,'<tr>')+length('<tr>'):end);
+        temp = temp(strfind(temp,'<td>')+length('<td>'):end);
     end
     tasks = struct2table(tasks);
 end

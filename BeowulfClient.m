@@ -1,7 +1,7 @@
 function [] = BeowulfClient(fun)
     % Registrarse en Machines
     IP = GetMachineIP();
-    BeowulfCreateMachine('Wating',IP)
+    BeowulfCreateMachine('Waiting',IP)
     % Obtener el ID de la Máquina
     machines = BeowulfReadMachines();
     for i = 1:height(machines)
@@ -20,7 +20,7 @@ function [] = BeowulfClient(fun)
                 % Actualizar status de Task a working
                 BeowulfUpdateTask(cell2mat(tasks.id(i)),'Working',cell2mat(tasks.input(i)),cell2mat(tasks.output(i)));
                 % Parse Inputs
-                temp = split(cell2mat(tasks.input(2)));
+                temp = split(cell2mat(tasks.input(i)));
                 INPUTS = zeros(length(temp),1);
                 for j = 1:length(INPUTS)
                     INPUTS(j) = str2double( cell2mat(temp(j)) );

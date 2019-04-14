@@ -1,4 +1,4 @@
-function [result] = add(INPUTS)
+function [result] = mysum(INPUTS)
     result = 0;
     for i = 1:length(INPUTS)
        result = result + INPUTS(i); 

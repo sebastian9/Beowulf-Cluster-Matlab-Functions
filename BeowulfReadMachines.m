@@ -1,7 +1,7 @@
 function [machines] = BeowulfReadMachines()
     temp = webread('https://beowulf-rocket.herokuapp.com/machines');
     c = count(temp,'<tr>') - 1;
-    machines = struct('ID',{},'status',{},'IP',{},'LastSeen',{});
+    machines = struct('ID',{},'status',{},'ip',{},'last_seen',{});
     temp = temp(strfind(temp,'<tbody>')+length('<tbody>'):end);
 
     for i = (1:c)
