@@ -1,13 +1,14 @@
 function [] = BeowulfClient(fun)
-    % Registrarse en Machines
+    % Registrarse en Machines y obtener el ID de la Máquina
     IP = GetMachineIP();
-    BeowulfCreateMachine('Waiting',IP)
-    % Obtener el ID de la Máquina
-%     pause(5); % Pause necessary for the server to register the machine
+    machine_ID = 0;
     machines = BeowulfReadMachines();
     for i = 1:height(machines)
            if strcmp(machines.ip(i),IP)
-                machine_ID = machines.id(i);
+               machine_ID = machines.id(i);
+               BeowulfUpdateMachine(machine_ID,'Waiting',IP);
+           elseif i == height(machines) && machine_ID == 0
+               BeowulfCreateMachine('Waiting',IP)
            end
     end
     % Revisar Tasks hasta encontrar una task en waiting con el IP de la
