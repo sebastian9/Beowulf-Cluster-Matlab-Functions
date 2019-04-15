@@ -19,7 +19,7 @@ function [outputs,invalid_inputs] = BeowulfMaster(inputs,timemax)
     % Definir Inputs para la tarea a realizar desde el vector de entrada 
       
                 Task = inputs{1};
-                inputs(1) = [];
+                inputs{1} = [];
     
     % Crear una Task con los Inputs definidos y la Machine encontrada como
     % waiting
