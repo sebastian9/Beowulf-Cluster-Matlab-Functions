@@ -1,14 +1,22 @@
 function [] = BeowulfClient(fun)
     % Registrarse en Machines y obtener el ID de la Máquina
     IP = GetMachineIP();
-    machine_ID = 0;
+    machine_ID = '0';
     machines = BeowulfReadMachines();
     for i = 1:height(machines)
            if strcmp(machines.ip(i),IP)
                machine_ID = machines.id(i);
                BeowulfUpdateMachine(machine_ID,'Waiting',IP);
-           elseif i == height(machines) && machine_ID == 0
-               BeowulfCreateMachine('Waiting',IP)
+           end
+    end
+    
+    machines = BeowulfReadMachines();
+    if strcmp(machine_ID,'0')
+        BeowulfCreateMachine('Waiting',IP)
+    end
+    for i = 1:height(machines)
+           if strcmp(machines.ip(i),IP)
+               machine_ID = machines.id(i);
            end
     end
     % Revisar Tasks hasta encontrar una task en waiting con el IP de la
@@ -39,6 +47,8 @@ function [] = BeowulfClient(fun)
                 BeowulfUpdateTask(tasks.id(i),'Done',IP,tasks.input(i),OUTPUTS);
                 % Actualizar el Machine status a waiting
                 BeowulfUpdateMachine(machine_ID,'Waiting',IP);
+           else
+               pause(1); % Pause to prevent server saturation
            end
         end
     end
