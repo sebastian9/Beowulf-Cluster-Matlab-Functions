@@ -19,7 +19,7 @@ function [outputs,invalid_inputs] = BeowulfMaster(inputs,timemax)
     % Definir Inputs para la tarea a realizar desde el vector de entrada 
       
                 Task = inputs{1};
-                inputs{1} = [];
+                inputs(1) = [];
     
     % Crear una Task con los Inputs definidos y la Machine encontrada como
     % waiting
@@ -80,8 +80,8 @@ function [outputs,invalid_inputs] = BeowulfMaster(inputs,timemax)
     % Revisar tasks en Done que no haya recopilado y recopilar su output
             if strcmp(Tasks.status(i),'Done')
                 if sum(ismember(finished_inputs,Tasks.input(i)))==0
-                    finished_inputs{end+1} = Tasks.input(i);
-                    finished_outputs{end+1} = Tasks.output(i);
+                    finished_inputs{end+1} = char(Tasks.input(i));
+                    finished_outputs{end+1} = char(Tasks.output(i));
                 end
             end
             i=i+1;
