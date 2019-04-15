@@ -3,27 +3,28 @@ function [] = BeowulfClient(fun)
     IP = GetMachineIP();
     BeowulfCreateMachine('Waiting',IP)
     % Obtener el ID de la Máquina
+%     pause(5); % Pause necessary for the server to register the machine
     machines = BeowulfReadMachines();
     for i = 1:height(machines)
-           if strcmp(cell2mat(machines.ip(i)),IP)
-                machine_ID = cell2mat(machines.id(i));
+           if strcmp(machines.ip(i),IP)
+                machine_ID = machines.id(i);
            end
     end
     % Revisar Tasks hasta encontrar una task en waiting con el IP de la
     % máquina
-   % while 1
+   while 1
         tasks = BeowulfReadTasks();
         for i = 1:height(tasks)
-           if strcmp(cell2mat(tasks.ip(i)),IP) && strcmp(cell2mat(tasks.status(i)),'Waiting')
+           if strcmp(tasks.ip(i),IP) && strcmp(tasks.status(i),'Waiting')
                 % Actualizar status de Machines a working
                 BeowulfUpdateMachine(machine_ID,'Working',IP);
                 % Actualizar status de Task a working
-                BeowulfUpdateTask(cell2mat(tasks.id(i)),'Working',cell2mat(tasks.input(i)),cell2mat(tasks.output(i)));
+                BeowulfUpdateTask(tasks.id(i),'Working',IP,tasks.input(i),tasks.output(i));
                 % Parse Inputs
-                temp = split(cell2mat(tasks.input(i)));
+                temp = split(tasks.input(i));
                 INPUTS = zeros(length(temp),1);
                 for j = 1:length(INPUTS)
-                    INPUTS(j) = str2double( cell2mat(temp(j)) );
+                    INPUTS(j) = str2double( temp(j) );
                 end
                 % Correr la función con los inputs de la task
                 OUTPUTS = fun(INPUTS);
@@ -34,10 +35,10 @@ function [] = BeowulfClient(fun)
                    OUTPUTS = [OUTPUTS,' ',num2str(temp(j))]; %#ok<AGROW>
                 end
                 % Actualizar el task status a done y output al output de la función
-                BeowulfUpdateTask(cell2mat(tasks.id(i)),'Done',cell2mat(tasks.input(i)),OUTPUTS);
+                BeowulfUpdateTask(tasks.id(i),'Done',IP,tasks.input(i),OUTPUTS);
                 % Actualizar el Machine status a waiting
                 BeowulfUpdateMachine(machine_ID,'Waiting',IP);
            end
         end
     end
-%end
+end

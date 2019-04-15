@@ -3,4 +3,5 @@ function [result] = mysum(INPUTS)
     for i = 1:length(INPUTS)
        result = result + INPUTS(i); 
     end
+    pause(30)
 end
